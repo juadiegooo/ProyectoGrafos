@@ -1,16 +1,28 @@
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QWidget
 import matplotlib.pyplot as plt
 import networkx as nx
-from controller import controller
+from .controller import Controller
 
 class View(QtWidgets.QMainWindow):
     def __init__(self):
         super(View, self).__init__()
-        uic.loadUi('main.ui', self)
-        self.controller = controller(self)
-        self.attack_button.clicked.connect(self.controller.attack)
-        self.show()
+        self.controller = Controller(self)
+        self.initUI()
         self.mostrar_grafo()
+
+    def initUI(self):
+        self.setWindowTitle('Simulación de Ciudad')
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        
+        layout = QVBoxLayout()
+        self.attack_button = QPushButton('Asalto')
+        self.attack_button.clicked.connect(self.controller.attack)
+        layout.addWidget(self.attack_button)
+
+        central_widget.setLayout(layout)
+        self.show()
 
     def mostrar_grafo(self):
         grafo = self.controller.ciudad.obtener_grafo()
